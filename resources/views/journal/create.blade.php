@@ -1,37 +1,63 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Input Jurnal Manual</h2>
-    </x-slot>
+    <x-slot name="header">Input Jurnal Umum</x-slot>
 
-    <div class="py-12 max-w-3xl mx-auto">
-        <form method="POST" action="{{ route('journal.store') }}">
-            @csrf
-            <div class="mb-4">
-                <label class="block font-medium text-sm text-gray-700">Tanggal</label>
-                <input type="date" name="tanggal" class="w-full rounded border-gray-300" required>
+    <form action="{{ route('journal.store') }}" method="POST">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label>Tanggal Jurnal</label>
+                <input type="date" name="journal_date" required class="w-full border rounded p-2">
             </div>
-
-            <div class="mb-4">
-                <label class="block font-medium text-sm text-gray-700">Keterangan</label>
-                <input type="text" name="keterangan" class="w-full rounded border-gray-300" required>
+            <div>
+                <label>Nomor Referensi</label>
+                <input type="text" name="reference_number" class="w-full border rounded p-2">
             </div>
+        </div>
 
-            <div class="mb-4">
-                <label class="block font-medium text-sm text-gray-700">Akun Debit</label>
-                <input type="text" name="akun_debit" class="w-full rounded border-gray-300">
+        <div class="mt-4">
+            <label>Deskripsi</label>
+            <textarea name="description" class="w-full border rounded p-2"></textarea>
+        </div>
+
+        <div class="mt-4">
+            <label>Detail Jurnal</label>
+            <div id="entries">
+                <div class="entry grid grid-cols-4 gap-2 mb-2">
+                    <select name="entries[0][account_id]" class="border rounded p-2">
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}">{{ $account->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="number" step="0.01" name="entries[0][debit]" placeholder="Debit" class="border rounded p-2">
+                    <input type="number" step="0.01" name="entries[0][credit]" placeholder="Kredit" class="border rounded p-2">
+                    <input type="text" name="entries[0][description]" placeholder="Keterangan" class="border rounded p-2">
+                </div>
             </div>
+            <button type="button" onclick="addEntry()" class="mt-2 bg-green-500 text-white px-4 py-1 rounded">+ Baris</button>
+        </div>
 
-            <div class="mb-4">
-                <label class="block font-medium text-sm text-gray-700">Akun Kredit</label>
-                <input type="text" name="akun_kredit" class="w-full rounded border-gray-300">
-            </div>
+        <div class="mt-4">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded">Simpan</button>
+        </div>
+    </form>
 
-            <div class="mb-4">
-                <label class="block font-medium text-sm text-gray-700">Nominal</label>
-                <input type="number" name="nominal" class="w-full rounded border-gray-300" required>
-            </div>
-
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Simpan</button>
-        </form>
-    </div>
+    <script>
+        let count = 1;
+        function addEntry() {
+            const container = document.getElementById('entries');
+            const html = `
+                <div class="entry grid grid-cols-4 gap-2 mb-2">
+                    <select name="entries[${count}][account_id]" class="border rounded p-2">
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}">{{ $account->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="number" step="0.01" name="entries[${count}][debit]" placeholder="Debit" class="border rounded p-2">
+                    <input type="number" step="0.01" name="entries[${count}][credit]" placeholder="Kredit" class="border rounded p-2">
+                    <input type="text" name="entries[${count}][description]" placeholder="Keterangan" class="border rounded p-2">
+                </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+            count++;
+        }
+    </script>
 </x-app-layout>

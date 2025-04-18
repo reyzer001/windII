@@ -15,13 +15,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-Route::prefix('jurnal')->name('journal.')->group(function () {
-    Route::get('/', [JournalController::class, 'index'])->name('index');
-    Route::get('/create', [JournalController::class, 'create'])->name('create');
-    Route::post('/', [JournalController::class, 'store'])->name('store');
-    Route::get('/approve', [JournalController::class, 'approve'])->name('approve');
+    Route::get('/journal', [JournalController::class, 'index'])->name('journal.index');
+    Route::get('/journal/create', [JournalController::class, 'create'])->name('journal.create');
+    Route::post('/journal', [JournalController::class, 'store'])->name('journal.store');
+    Route::post('/journal/approve', [JournalController::class, 'approve'])->name('journal.approve');
 });
 
 
