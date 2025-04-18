@@ -13,9 +13,10 @@
             font-family: 'Inter', sans-serif;
             background-color: #f9fafb;
         }
-        .sidebar {
-            background-color: #1e293b;
-            color: #e2e8f0;
+        aside {
+            background-color: white;
+            border-right: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .sidebar-link {
             padding: 0.75rem 1rem;
@@ -25,7 +26,7 @@
             transition: all 0.3s;
         }
         .sidebar-link:hover, .sidebar-link.active {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.05);
         }
         .sidebar-link svg {
             width: 1.25rem;
@@ -70,92 +71,191 @@
         }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body class="h-screen flex overflow-hidden" x-data="{ sidebarOpen: true, orderSubmenuOpen: false, profileSubmenuOpen: false }">
     <!-- Sidebar -->
-    <aside class="sidebar w-64 flex-shrink-0 h-full flex flex-col">
-        <div class="p-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+    <aside class="relative h-full flex flex-col transition-all duration-300" :class="sidebarOpen ? 'w-64' : 'w-16'">
+        <!-- Toggle button -->
+        <button @click="sidebarOpen = !sidebarOpen" class="absolute -right-3 top-10 bg-white rounded-full p-1 shadow-md z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" :class="sidebarOpen ? 'rotate-0' : 'rotate-180'">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            <div class="ml-3">
-                <h1 class="font-bold text-xl">DASHBOARD</h1>
-                <p class="text-xs text-gray-400">Sales Management Dashboard</p>
-            </div>
+        </button>
+        
+        <!-- Logo -->
+        <div class="p-4 flex items-center justify-center">
+            <template x-if="sidebarOpen">
+                <a href="/" class="flex items-center">
+                    <svg class="h-6 w-6 text-emerald-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="ml-2 text-lg font-semibold text-gray-800">voltra</span>
+                </a>
+            </template>
+            <template x-if="!sidebarOpen">
+                <a href="/" class="flex items-center justify-center">
+                    <svg class="h-6 w-6 text-emerald-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </a>
+            </template>
         </div>
         
-        <div class="mt-6 px-4 text-xs font-semibold text-gray-400 uppercase">DASHBOARD</div>
-        
-        <nav class="mt-2 flex-1 px-2 space-y-1">
-            <a href="#" class="sidebar-link active">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+        <!-- Navigation -->
+        <nav class="mt-6 flex-1 px-2 space-y-1 overflow-y-auto">
+            <!-- Dashboard -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
-                Dashboard
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+            
+            <!-- Calendar -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Products
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Calendar</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
-                </svg>
-                Store
+            
+            <!-- Chat -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <div class="relative">
+                    <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                </div>
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Chat</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
-                    <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+            
+            <!-- Purchasing -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                Messages
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Purchasing</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+            
+            <!-- Orders with submenu -->
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="orderSubmenuOpen = !orderSubmenuOpen" class="w-full flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                    <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Orders</span>
+                    <svg x-show="sidebarOpen" class="ml-auto h-4 w-4 text-gray-500 transition-transform duration-200" :class="orderSubmenuOpen ? 'rotate-90' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <div x-show="sidebarOpen && orderSubmenuOpen" class="pl-8 mt-1 space-y-1" style="display: none;">
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                        <span>Pending</span>
+                    </a>
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                        <span>Completed</span>
+                    </a>
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                        <span>Cancelled</span>
+                        <span class="ml-auto bg-gray-200 text-gray-800 text-xs rounded-full px-2 py-0.5">8</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Pricing -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Statistics
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Pricing</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+            
+            <!-- Shipping -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
                 </svg>
-                Invoices
-                <span class="ml-auto bg-indigo-500 text-white text-xs rounded-full px-2 py-0.5">1</span>
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Shipping</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            
+            <!-- Plans -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                To Do list
-            </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                </svg>
-                Finances
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Plans</span>
             </a>
         </nav>
         
-        <div class="mt-6 px-4 text-xs font-semibold text-gray-400 uppercase">HELP & SUPPORT</div>
-        
-        <nav class="mt-2 px-2 space-y-1 mb-8">
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+        <!-- Bottom section -->
+        <div class="p-2 mt-auto">
+            <!-- Help -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Help & Center
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Help</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            
+            <!-- Settings -->
+            <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                <svg class="h-5 w-5 text-gray-500 group-hover:text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Settings
+                <span class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">Settings</span>
             </a>
-        </nav>
+            
+            <!-- User profile -->
+            <div class="relative mt-2" x-data="{ open: false }" @click.away="profileSubmenuOpen = false">
+                <button @click="profileSubmenuOpen = !profileSubmenuOpen" class="w-full flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                    <div class="relative flex-shrink-0">
+                        <img class="h-8 w-8 rounded-full object-cover" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User avatar">
+                        <span class="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500 ring-1 ring-white"></span>
+                    </div>
+                    <div class="ml-3 transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 hidden'">
+                        <p class="text-sm font-medium">Les Tien</p>
+                        <p class="text-xs text-gray-500">les.tien@example.com</p>
+                    </div>
+                    <svg x-show="sidebarOpen" class="ml-auto h-4 w-4 text-gray-500 transition-transform duration-200" :class="profileSubmenuOpen ? 'rotate-90' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <div x-show="sidebarOpen && profileSubmenuOpen" class="pl-8 mt-1 space-y-1" style="display: none;">
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <svg class="h-4 w-4 text-gray-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>My profile</span>
+                    </a>
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <svg class="h-4 w-4 text-gray-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <svg class="h-4 w-4 text-gray-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Account settings</span>
+                    </a>
+                    <a href="#" class="flex items-center p-2 rounded-lg text-gray-700 hover:bg-gray-100 group">
+                        <svg class="h-4 w-4 text-gray-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Sign out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </aside>
-
+    
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto">
         <div class="p-6">
